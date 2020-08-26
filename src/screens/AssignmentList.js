@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
     color: "black",
     fontWeight: "400",
     fontFamily: "'Quicksand', sans-serif",
-    fontSize: "25px",
+    fontSize: "20px",
   },
   linksDiv: {
     marginTop: "10px",

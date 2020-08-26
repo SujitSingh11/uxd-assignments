@@ -88,7 +88,6 @@ const useStyles = makeStyles((theme) => {
       marginBottom: "20px",
     },
     button: {
-      padding: "10px",
       margin: "0px 15px",
       fontWeight: "700",
       fontFamily: "'Quicksand', sans-serif",
@@ -96,7 +95,6 @@ const useStyles = makeStyles((theme) => {
       padding: "10px 25px",
     },
     buttonLogin: {
-      padding: "10px",
       margin: "0px 15px",
       fontWeight: "700",
       fontFamily: "'Quicksand', sans-serif",
@@ -121,7 +119,6 @@ const useStyles = makeStyles((theme) => {
     },
     paper: {
       position: "absolute",
-      width: 400,
       backgroundColor: theme.palette.background.paper,
       border: "none",
       borderColor: "#fff",

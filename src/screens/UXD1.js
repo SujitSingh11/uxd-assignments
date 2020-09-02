@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import Validator from "validator";
 
 // Material UI
-import { Typography, Paper, InputBase, Button, Modal } from "@material-ui/core";
+import {
+  Typography,
+  Paper,
+  InputBase,
+  Button,
+  Modal,
+  CircularProgress,
+  Link,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 // Icons
@@ -10,20 +18,23 @@ import PersonIcon from "@material-ui/icons/Person";
 import LockIcon from "@material-ui/icons/Lock";
 
 // Assets
-import SVG3 from "../assets/SVG3.svg";
+import Logo from "../assets/logo1.png";
 import SVG4 from "../assets/SVG4.svg";
+import SVG5 from "../assets/SVG5.svg";
+import SVG6 from "../assets/SVG6.svg";
 
 const useStyles = makeStyles((theme) => {
   console.log(theme);
   return {
     root: {
-      flex: 1,
-      textAlign: "-webkit-center",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
     },
     cardLogin: {
       width: "500px",
       textAlign: "center",
-      marginTop: "20px",
     },
     welcomeSVGDiv: {
       padding: "10px 0px",
@@ -107,6 +118,7 @@ const useStyles = makeStyles((theme) => {
     },
     errorDiv: {
       margin: "10px",
+      height: "10px",
     },
     error: {
       color: "#e91e63",
@@ -121,20 +133,23 @@ const useStyles = makeStyles((theme) => {
       position: "absolute",
       backgroundColor: theme.palette.background.paper,
       border: "none",
-      borderColor: "#fff",
+      background:
+        "linear-gradient(90deg, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
+      padding: "5px",
       outline: "none",
-      width: "500px",
+      width: "550px",
+    },
+    paperContainer: {
+      background: "#fff",
+      padding: "30px",
     },
     titleModal: {
       letterSpacing: "5px",
       fontWeight: "500",
       fontFamily: "'Quicksand', sans-serif",
     },
-    body: {
-      margin: "20px 0px",
-    },
+
     modalBody: {
       letterSpacing: "5px",
       fontWeight: "500",
@@ -146,6 +161,28 @@ const useStyles = makeStyles((theme) => {
     modalSVGDiv: {
       marginBottom: "20px",
     },
+    paperTop: {
+      height: "6px",
+      width: "100%",
+      background: "rgb(63,94,251)",
+      background:
+        "linear-gradient(90deg, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)",
+      borderTopRightRadius: "4px",
+      borderTopLeftRadius: "4px",
+    },
+    forgetPassDiv: {
+      marginTop: "20px",
+      textAlign: "left",
+      marginLeft: "13%",
+    },
+    forgetPass: {
+      color: "#00bfa6",
+      fontWeight: "500",
+      fontFamily: "'Quicksand', sans-serif",
+    },
+    loader: {
+      color: "#00bfa6",
+    },
   };
 });
 
@@ -156,10 +193,13 @@ const userData = {
 
 const UXD1 = () => {
   const [email, setEmail] = useState("");
+  const [emailReset, setEmailReset] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-
+  const [isloading, setIsloading] = useState(true);
+  const [forget, setForget] = useState(false);
+  const [forgetSent, setForgetSent] = useState(false);
   const classes = useStyles();
 
   const handleLogin = (event) => {
@@ -188,8 +228,17 @@ const UXD1 = () => {
     if (userData.password !== password) {
       return setError("Incorrect Password");
     }
-
+    setIsloading(true);
     handleOpen(true);
+    setTimeout(() => {
+      setIsloading(false);
+    }, 1500);
+  };
+
+  const handleForget = () => {
+    setForget(true);
+    handleOpen(true);
+    setIsloading(false);
   };
 
   const handleOpen = () => {
@@ -198,13 +247,16 @@ const UXD1 = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setForget(false);
+    setForgetSent(false);
   };
 
   return (
     <div className={classes.root}>
       <Paper className={classes.cardLogin} elevation={3}>
+        <div className={classes.paperTop}></div>
         <div className={classes.welcomeSVGDiv}>
-          <img alt="welcome-svg" src={SVG3} className={classes.welcomeSVG} />
+          <img alt="welcome-svg" src={Logo} className={classes.welcomeSVG} />
         </div>
         <div className={classes.cardTitleDiv}>
           <Typography variant="h4" component="h4" className={classes.cardTitle}>
@@ -250,6 +302,17 @@ const UXD1 = () => {
             startAdornment={<LockIcon className={classes.searchIcon} />}
             autoComplete="false"
           />
+          <div className={classes.forgetPassDiv}>
+            <Link
+              href="#"
+              className={classes.forgetPass}
+              onClick={() => {
+                handleForget();
+              }}
+            >
+              forget password?
+            </Link>
+          </div>
           <div className={classes.buttonDiv}>
             <Button
               variant="contained"
@@ -280,27 +343,116 @@ const UXD1 = () => {
         className={classes.modal}
       >
         <Paper className={classes.paper}>
-          <div className={classes.modalSVGDiv}>
-            <img alt="success-svg" src={SVG4} className={classes.modalSVG} />
-          </div>
-          <div>
-            <Typography
-              variant="h4"
-              component="h4"
-              className={classes.titleModal}
-            >
-              Login Successful!
-            </Typography>
-          </div>
-          <div className={classes.body}>
-            <Typography
-              variant="p"
-              component="span"
-              className={classes.modalBody}
-            >
-              Email: {userData.email}
-            </Typography>
-          </div>
+          {isloading ? (
+            <div className={classes.paperContainer}>
+              <CircularProgress className={classes.loader} size="60px" />
+              <h3>Checking...</h3>
+            </div>
+          ) : forget ? (
+            forgetSent ? (
+              <div className={classes.paperContainer}>
+                <div className={classes.modalSVGDiv}>
+                  <img
+                    alt="success-svg"
+                    src={SVG6}
+                    className={classes.modalSVG}
+                  />
+                </div>
+                <div>
+                  <Typography
+                    variant="h4"
+                    component="h4"
+                    className={classes.titleModal}
+                  >
+                    Reset Mail Sent
+                  </Typography>
+                </div>
+              </div>
+            ) : (
+              <form
+                className={classes.paperContainer}
+                onSubmit={() => {
+                  setIsloading(true);
+                  setForgetSent(true);
+                  setTimeout(() => {
+                    setIsloading(false);
+                  }, 1500);
+                }}
+              >
+                <div className={classes.modalSVGDiv}>
+                  <img
+                    alt="success-svg"
+                    src={SVG5}
+                    className={classes.modalSVG}
+                  />
+                </div>
+                <div>
+                  <InputBase
+                    placeholder="Enter your email"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ "aria-label": "password" }}
+                    type="text"
+                    value={password}
+                    onChange={(e) => {
+                      setEmailReset(e.target.value);
+                    }}
+                    startAdornment={<LockIcon className={classes.searchIcon} />}
+                    autoComplete="false"
+                  />
+                </div>
+                <div className={classes.buttonDiv}>
+                  <Button
+                    variant="contained"
+                    className={classes.buttonLogin}
+                    type="submit"
+                  >
+                    Send
+                  </Button>
+                  <Button
+                    variant="contained"
+                    className={classes.button}
+                    onClick={() => {
+                      setEmailReset("");
+                      handleClose();
+                    }}
+                  >
+                    Cancle
+                  </Button>
+                </div>
+              </form>
+            )
+          ) : (
+            <div className={classes.paperContainer}>
+              <div className={classes.modalSVGDiv}>
+                <img
+                  alt="success-svg"
+                  src={SVG4}
+                  className={classes.modalSVG}
+                />
+              </div>
+              <div>
+                <Typography
+                  variant="h4"
+                  component="h4"
+                  className={classes.titleModal}
+                >
+                  Login Successful!
+                </Typography>
+              </div>
+              <div className={classes.body}>
+                <Typography
+                  variant="p"
+                  component="span"
+                  className={classes.modalBody}
+                >
+                  Email: {userData.email}
+                </Typography>
+              </div>
+            </div>
+          )}
         </Paper>
       </Modal>
     </div>

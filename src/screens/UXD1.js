@@ -164,7 +164,6 @@ const useStyles = makeStyles((theme) => {
     paperTop: {
       height: "6px",
       width: "100%",
-      background: "rgb(63,94,251)",
       background:
         "linear-gradient(90deg, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)",
       borderTopRightRadius: "4px",
@@ -193,7 +192,7 @@ const userData = {
 
 const UXD1 = () => {
   const [email, setEmail] = useState("");
-  const [emailReset, setEmailReset] = useState("");
+  const [, setEmailReset] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
